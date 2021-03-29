@@ -14,7 +14,8 @@ import (
 
 func getDuplicate(numbers []int) int {
 	sort.Ints(numbers)
-	valid, duplicate := 0, 0
+	valid := 0
+	duplicate := 0
 	for i := 1; i < len(numbers); i++ {
 		n := sort.Search(len(numbers), func(n int) bool { return numbers[n] >= i })
 		if n < len(numbers) && numbers[n] == i {

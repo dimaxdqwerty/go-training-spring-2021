@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"reflect"
+	"sort"
 	"strings"
 )
 
@@ -15,11 +15,37 @@ import (
   "Buckethead" is an anagram of "DeathCubeK"
 */
 
-func isAnagram(test, original string) bool {
-	test, original = strings.ToLower(test), strings.ToLower(test)
-	arrTest, arrOriginal := strings.Split(test, ""), strings.Split(original, "")
-	return reflect.DeepEqual(arrTest, arrOriginal)
+type sortRunes []rune
+
+func (s sortRunes) Len() int {
+	return len(s)
 }
+
+func (s sortRunes) Less(i, j int) bool {
+	return s[i] < s[j]
+}
+
+func (s sortRunes) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func isAnagram(test, original string) bool {
+	test = strings.ToLower(test)
+	original = strings.ToLower(original)
+	editedTest := strings.Replace(test, " ", "", -1)
+	editedOriginal := strings.Replace(original, " ", "", -1)
+	editedTest = sortString(editedTest)
+	editedOriginal = sortString(editedOriginal)
+	return editedTest == editedOriginal
+}
+
+
+func sortString(s string) string {
+	r := []rune(s)
+	sort.Sort(sortRunes(r))
+	return string(r)
+}
+
 
 func main() {
 	test := "Buckethead"

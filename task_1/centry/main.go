@@ -14,8 +14,7 @@ import "fmt"
 */
 
 func century(year int) int {
-	var century = ((year-1)/100)+1
-	return century
+	return ((year-1)/100)+1
 }
 
 func main() {
