@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
  Description: It's pretty straightforward. Your goal is to create a function
  that removes the first and last characters of a string.
@@ -8,9 +10,12 @@ package main
 */
 
 func removeChar(word string) string {
-	panic("Implement me!")
+	word = word[1:len(word)-1]
+	return word
 }
 
 func main() {
-
+	word := "sstringg"
+	word = removeChar(word)
+	fmt.Println(word)
 }
