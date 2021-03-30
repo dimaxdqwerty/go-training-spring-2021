@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 type Node struct {
@@ -15,27 +14,17 @@ type LinkedList struct {
 	len int
 }
 
-func (L *LinkedList) Len() int {
-	return L.len
-}
-
-func (L *LinkedList) Less(i, j int) bool {
-	i1 := L.GetAtPos(i).item
-	i2 := L.GetAtPos(j).item
+func more(i1 interface{}, i2 interface{}) bool {
 	switch i1.(type) {
 	case int:
-		return i1.(int) < i2.(int)
+		return i1.(int) > i2.(int)
 	case float64:
-		return i1.(float64) < i2.(float64)
+		return i1.(float64) > i2.(float64)
 	case string:
-		return i1.(string) < i2.(string)
+		return i1.(string) > i2.(string)
 	default:
 		panic("Unknown type")
 	}
-}
-
-func (L *LinkedList) Swap(i, j int) {
-	L.GetAtPos(i).item, L.GetAtPos(j).item = L.GetAtPos(j).item, L.GetAtPos(i).item
 }
 
 func (L *LinkedList) Insert(item interface{}) {
@@ -102,7 +91,14 @@ func (L *LinkedList) GetAtPos(id int) *Node {
 }
 
 func (L *LinkedList) Sort() {
-	sort.Sort(L)
+	for i := 1; i < L.len; i++ {
+		x := L.GetAtPos(i).item
+		j := i
+		for ; j >= 1 && more(L.GetAtPos(j-1).item, x); j-- {
+			L.GetAtPos(j).item = L.GetAtPos(j-1).item
+		}
+		L.GetAtPos(j).item = x
+	}
 }
 
 func main() {

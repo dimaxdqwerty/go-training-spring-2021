@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 type Node struct {
@@ -16,27 +15,17 @@ type Queue struct {
 	len int
 }
 
-func (Q *Queue) Len() int {
-	return Q.len
-}
-
-func (Q *Queue) Less(i, j int) bool {
-	i1 := Q.GetAtPos(i).item
-	i2 := Q.GetAtPos(j).item
+func more(i1 interface{}, i2 interface{}) bool {
 	switch i1.(type) {
 	case int:
-		return i1.(int) < i2.(int)
+		return i1.(int) > i2.(int)
 	case float64:
-		return i1.(float64) < i2.(float64)
+		return i1.(float64) > i2.(float64)
 	case string:
-		return i1.(string) < i2.(string)
+		return i1.(string) > i2.(string)
 	default:
 		panic("Unknown type")
 	}
-}
-
-func (Q *Queue) Swap(i, j int) {
-	Q.GetAtPos(i).item, Q.GetAtPos(j).item = Q.GetAtPos(j).item, Q.GetAtPos(i).item
 }
 
 func (Q *Queue) Enqueue(item interface{}) {
@@ -73,7 +62,14 @@ func (Q *Queue) GetAtPos(id int) *Node {
 }
 
 func (Q *Queue) Sort() {
-	sort.Sort(Q)
+	for i := 1; i < Q.len; i++ {
+		x := Q.GetAtPos(i).item
+		j := i
+		for ; j >= 1 && more(Q.GetAtPos(j-1).item, x); j-- {
+			Q.GetAtPos(j).item = Q.GetAtPos(j-1).item
+		}
+		Q.GetAtPos(j).item = x
+	}
 }
 
 func main() {
