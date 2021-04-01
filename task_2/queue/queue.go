@@ -13,6 +13,7 @@ type Queue struct {
 	head *Node
 	tail *Node
 	len int
+	size int
 }
 
 func more(i1 interface{}, i2 interface{}) bool {
@@ -29,15 +30,19 @@ func more(i1 interface{}, i2 interface{}) bool {
 }
 
 func (Q *Queue) Enqueue(item interface{}) {
-	n := &Node{item: item}
-	if Q.tail == nil {
-		Q.tail = n
-		Q.head = n
+	if !Q.IsFull() {
+		n := &Node{item: item}
+		if Q.tail == nil {
+			Q.tail = n
+			Q.head = n
+		} else {
+			Q.tail.next = n
+			Q.tail = n
+		}
+		Q.len++
 	} else {
-		Q.tail.next = n
-		Q.tail = n
+		panic("The queue is full")
 	}
-	Q.len++
 }
 
 func (Q *Queue) Dequeue() {
@@ -72,8 +77,25 @@ func (Q *Queue) Sort() {
 	}
 }
 
+func (Q *Queue) IsEmpty() bool {
+	return Q.len == 0
+}
+
+func (Q *Queue) IsFull() bool {
+	return Q.size <= Q.len
+}
+
+func NewQueue(size int) *Queue {
+	return &Queue{
+		size:  size,
+	}
+}
+
+
 func main() {
-	queue := Queue{}
+	queue := NewQueue(5)
+	fmt.Println(queue.IsEmpty())
+
 	queue.Enqueue(1)
 	queue.Enqueue(5)
 	queue.Enqueue(3)

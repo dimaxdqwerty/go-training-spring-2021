@@ -101,8 +101,12 @@ func (L *LinkedList) Sort() {
 	}
 }
 
+func NewLinkedList() *LinkedList {
+	return &LinkedList{}
+}
+
 func main() {
-	list := LinkedList{}
+	list := NewLinkedList()
 	list.Insert(1)
 	list.Insert(4)
 	list.Insert(2)
