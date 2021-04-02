@@ -2,19 +2,24 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
+// Node represents node of data struct linked list.
 type Node struct {
-	item interface{}
-	next *Node
+	item interface{} // an item that is in the node
+	next *Node // pointer to the next node
 }
 
+// LinkedList represents the implementation of singly linked list.
 type LinkedList struct {
-	head *Node
-	len int
+	head *Node // the head of the list
+	len int // the len of the list
 }
 
-func more(i1 interface{}, i2 interface{}) bool {
+// more compares two items.
+// Returns true if i1 > i2. Returns false if i1 < i2
+func more(i1, i2 interface{}) bool {
 	switch i1.(type) {
 	case int:
 		return i1.(int) > i2.(int)
@@ -23,10 +28,13 @@ func more(i1 interface{}, i2 interface{}) bool {
 	case string:
 		return i1.(string) > i2.(string)
 	default:
-		panic("Unknown type")
+		fmt.Println("more: unknown type")
+		os.Exit(1)
 	}
+	return false
 }
 
+// Insert adds an item at the beginning of the list.
 func (L *LinkedList) Insert(item interface{}) {
 	n := &Node{item: item}
 	if L.len == 0 {
@@ -45,9 +53,11 @@ func (L *LinkedList) Insert(item interface{}) {
 	}
 }
 
+// Display displays the complete list to the console.
 func (L *LinkedList) Display() {
 	if L.len == 0 {
-		panic("The list is empty")
+		fmt.Println("Display: the list is empty")
+		os.Exit(1)
 	}
 	ptr := L.head
 	for i := 0; i < L.len; i++ {
@@ -57,21 +67,26 @@ func (L *LinkedList) Display() {
 	fmt.Println()
 }
 
+// Search returns an item by the id.
 func (L *LinkedList) Search(id int) interface{} {
 	if id >= L.len {
-		panic("id >= len")
+		fmt.Println("Search: wrong entered id")
+		os.Exit(1)
 	}
 	return L.GetAtPos(id).item
 }
 
+// Deletion deletes an item at the beginning of the list.
 func (L *LinkedList) Deletion() {
 	L.head = L.head.next
 	L.len--
 }
 
+// Delete deletes an item by the id.
 func (L *LinkedList) Delete(id int) {
 	if id >= L.len {
-		panic("id >= len")
+		fmt.Println("Delete: wrong entered id")
+		os.Exit(1)
 	}
 	if id == 0 {
 		L.Deletion()
@@ -82,7 +97,12 @@ func (L *LinkedList) Delete(id int) {
 	}
 }
 
+// GetAtPos gets a node by the id.
 func (L *LinkedList) GetAtPos(id int) *Node {
+	if id < 0 || id >=  L.len {
+		fmt.Println("GetAtPos: wrong entered id")
+		os.Exit(1)
+	}
 	ptr := L.head
 	for i := 0; i < id; i++ {
 		ptr = ptr.next
@@ -90,6 +110,7 @@ func (L *LinkedList) GetAtPos(id int) *Node {
 	return ptr
 }
 
+// Sort sorts the list using insertion sort algorithm.
 func (L *LinkedList) Sort() {
 	for i := 1; i < L.len; i++ {
 		x := L.GetAtPos(i).item
@@ -101,6 +122,7 @@ func (L *LinkedList) Sort() {
 	}
 }
 
+// NewLinkedList creates a list.
 func NewLinkedList() *LinkedList {
 	return &LinkedList{}
 }
