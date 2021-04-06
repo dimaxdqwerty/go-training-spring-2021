@@ -1,4 +1,4 @@
-package main
+package list
 
 import (
 	"fmt"
@@ -17,9 +17,9 @@ type LinkedList struct {
 	len int // the len of the list
 }
 
-// more compares two items.
+// More compares two items.
 // Returns true if i1 > i2. Returns false if i1 < i2
-func more(i1, i2 interface{}) bool {
+func More(i1, i2 interface{}) bool {
 	switch i1.(type) {
 	case int:
 		return i1.(int) > i2.(int)
@@ -28,7 +28,7 @@ func more(i1, i2 interface{}) bool {
 	case string:
 		return i1.(string) > i2.(string)
 	default:
-		fmt.Println("more: unknown type")
+		fmt.Println("More: unknown type")
 		os.Exit(1)
 	}
 	return false
@@ -115,7 +115,7 @@ func (L *LinkedList) Sort() {
 	for i := 1; i < L.len; i++ {
 		x := L.GetAtPos(i).item
 		j := i
-		for ; j >= 1 && more(L.GetAtPos(j-1).item, x); j-- {
+		for ; j >= 1 && More(L.GetAtPos(j-1).item, x); j-- {
 			L.GetAtPos(j).item = L.GetAtPos(j-1).item
 		}
 		L.GetAtPos(j).item = x
@@ -125,21 +125,4 @@ func (L *LinkedList) Sort() {
 // NewLinkedList creates a list.
 func NewLinkedList() *LinkedList {
 	return &LinkedList{}
-}
-
-func main() {
-	list := NewLinkedList()
-	list.Insert(1)
-	list.Insert(4)
-	list.Insert(2)
-	list.Insert(5)
-	list.Insert(3)
-	list.Display()
-	fmt.Println(list.Search(3))
-	list.Deletion()
-	list.Display()
-	list.Delete(2)
-	list.Display()
-	list.Sort()
-	list.Display()
 }

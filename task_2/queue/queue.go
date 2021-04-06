@@ -1,4 +1,4 @@
-package main
+package queue
 
 import (
 	"fmt"
@@ -19,9 +19,9 @@ type Queue struct {
 	size int // the max size of the queue
 }
 
-// more compares two items.
+// More compares two items.
 // Returns true if i1 > i2. Returns false if i1 < i2.
-func more(i1, i2 interface{}) bool {
+func More(i1, i2 interface{}) bool {
 	switch i1.(type) {
 	case int:
 		return i1.(int) > i2.(int)
@@ -30,7 +30,7 @@ func more(i1, i2 interface{}) bool {
 	case string:
 		return i1.(string) > i2.(string)
 	default:
-		fmt.Println("more: unknown type")
+		fmt.Println("More: unknown type")
 		os.Exit(1)
 	}
 	return false
@@ -94,7 +94,7 @@ func (Q *Queue) Sort() {
 	for i := 1; i < Q.len; i++ {
 		x := Q.GetAtPos(i).item
 		j := i
-		for ; j >= 1 && more(Q.GetAtPos(j-1).item, x); j-- {
+		for ; j >= 1 && More(Q.GetAtPos(j-1).item, x); j-- {
 			Q.GetAtPos(j).item = Q.GetAtPos(j-1).item
 		}
 		Q.GetAtPos(j).item = x
@@ -116,23 +116,4 @@ func NewQueue(size int) *Queue {
 	return &Queue{
 		size:  size,
 	}
-}
-
-
-func main() {
-	queue := NewQueue(5)
-	fmt.Println(queue.IsEmpty())
-	queue.Enqueue(1)
-	queue.Enqueue(5)
-	queue.Enqueue(3)
-	queue.Enqueue(2)
-	queue.Enqueue(4)
-	fmt.Println(queue.Peek())
-	queue.Dequeue()
-	fmt.Println(queue.Peek())
-	queue.Sort()
-	for i := 0; i < queue.len; i++ {
-		fmt.Printf("%v ", queue.GetAtPos(i).item)
-	}
-	fmt.Println()
 }
