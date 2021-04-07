@@ -15,8 +15,8 @@ type Node struct {
 type Queue struct {
 	head *Node // the head of the queue
 	tail *Node // the tail of the queue
-	len int // the len of the queue
-	size int // the max size of the queue
+	Len  int   // the Len of the queue
+	Cap  int   // the max capacity of the queue
 }
 
 // More compares two items.
@@ -50,7 +50,7 @@ func (Q *Queue) Enqueue(item interface{}) {
 		Q.tail.next = n
 		Q.tail = n
 	}
-	Q.len++
+	Q.Len++
 }
 
 // Dequeue deletes an item at the head of the head.
@@ -63,7 +63,7 @@ func (Q *Queue) Dequeue() {
 	if Q.head == nil {
 		Q.tail = nil
 	}
-	Q.len--
+	Q.Len--
 }
 
 // Peek gets the item of the front of the queue without removing it.
@@ -78,7 +78,7 @@ func (Q *Queue) Peek() interface{} {
 
 // GetAtPos gets a node by the id.
 func (Q *Queue) GetAtPos(id int) *Node {
-	if id < 0 || id >=  Q.len {
+	if id < 0 || id >=  Q.Len {
 		fmt.Println("GetAtPos: wrong entered id")
 		os.Exit(1)
 	}
@@ -91,7 +91,7 @@ func (Q *Queue) GetAtPos(id int) *Node {
 
 // Sort sorts the queue using insertion sort algorithm.
 func (Q *Queue) Sort() {
-	for i := 1; i < Q.len; i++ {
+	for i := 1; i < Q.Len; i++ {
 		x := Q.GetAtPos(i).item
 		j := i
 		for ; j >= 1 && More(Q.GetAtPos(j-1).item, x); j-- {
@@ -103,17 +103,17 @@ func (Q *Queue) Sort() {
 
 // IsEmpty checks if the queue is empty
 func (Q *Queue) IsEmpty() bool {
-	return Q.len == 0
+	return Q.Len == 0
 }
 
 // IsFull checks if the queue is full
 func (Q *Queue) IsFull() bool {
-	return Q.size <= Q.len
+	return Q.Cap <= Q.Len
 }
 
-// NewQueue creates a queue with entered size
+// NewQueue creates a queue with entered Cap
 func NewQueue(size int) *Queue {
 	return &Queue{
-		size:  size,
+		Cap: size,
 	}
 }

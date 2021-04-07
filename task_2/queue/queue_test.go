@@ -101,7 +101,7 @@ func TestQueue_Len(t *testing.T) {
 	queue.Enqueue(1)
 	queue.Enqueue(3)
 	queue.Enqueue(4)
-	actual := queue.len
+	actual := queue.Len
 	slice := make([]int, 0, 5)
 	for i := 0; i < 5; i++ {
 		slice = append(slice, i)
@@ -113,7 +113,7 @@ func TestQueue_Len(t *testing.T) {
 func TestQueue_Cap(t *testing.T) {
 	assert := assert.New(t)
 	queue := NewQueue(5)
-	actual := queue.size
+	actual := queue.Cap
 	slice := make([]int, 0, 5)
 	expected := cap(slice)
 	assert.Equal(actual, expected, fmt.Sprintf("%d and %d not equal, but expected", actual, expected))
