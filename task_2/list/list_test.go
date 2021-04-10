@@ -2,9 +2,9 @@ package list
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestLinkedList_Insert(t *testing.T) {
@@ -20,8 +20,9 @@ func TestLinkedList_Insert(t *testing.T) {
 		expected = append(expected, i)
 	}
 	for i, v := range expected {
-		actualNum := actual.Search(i).(int)
-		assert.Equal(v, actualNum, fmt.Sprintf("%d and %d not equal, but expected", actualNum, v))
+		item, _ := actual.Search(i)
+		actualItem, _ := item.(int)
+		assert.Equal(v, actualItem, fmt.Sprintf("%v and %v not equal, but expected", actualItem, v))
 	}
 }
 
@@ -40,8 +41,9 @@ func TestLinkedList_Delete(t *testing.T) {
 	}
 	expected = append(expected[:3], expected[4:]...)
 	for i, v := range expected {
-		actualNum := actual.Search(i).(int)
-		assert.Equal(v, actualNum, fmt.Sprintf("%d and %d not equal, but expected", actualNum, v))
+		item, _ := actual.Search(i)
+		actualItem, _ := item.(int)
+		assert.Equal(v, actualItem, fmt.Sprintf("%v and %v not equal, but expected", actualItem, v))
 	}
 }
 
@@ -60,8 +62,9 @@ func TestLinkedList_Deletion(t *testing.T) {
 	}
 	expected = expected[1:]
 	for i, v := range expected {
-		actualNum := actual.Search(i).(int)
-		assert.Equal(v, actualNum, fmt.Sprintf("%d and %d not equal, but expected", actualNum, v))
+		item, _ := actual.Search(i)
+		actualItem, _ := item.(int)
+		assert.Equal(v, actualItem, fmt.Sprintf("%v and %v not equal, but expected", actualItem, v))
 	}
 }
 
@@ -77,8 +80,9 @@ func TestLinkedList_Sort(t *testing.T) {
 	expected := make([]int, 0, 5)
 	for i := 0; i < 5; i++ {
 		expected = append(expected, i)
-		actualNum := actual.Search(i).(int)
-		assert.Equal(expected[i], actualNum, fmt.Sprintf("%d and %d not equal, but expected", actualNum, expected[i]))
+		item, _ := actual.Search(i)
+		actualItem, _ := item.(int)
+		assert.Equal(expected[i], actualItem, fmt.Sprintf("%v and %v not equal, but expected", actualItem, expected[i]))
 	}
 }
 
@@ -96,5 +100,52 @@ func TestLinkedList_Len(t *testing.T) {
 	}
 	actual := list.Len
 	expected := len(slice)
-	assert.Equal(actual, expected, fmt.Sprintf("%d and %d not equal, but expected", actual, expected))
+	assert.Equal(actual, expected, fmt.Sprintf("%v and %v not equal, but expected", actual, expected))
+}
+
+func TestLinkedList_Display_Error(t *testing.T) {
+	assert := assert.New(t)
+	list := NewLinkedList()
+	actual := list.Display()
+	expected := fmt.Errorf("the list is empty")
+	assert.Equal(actual, expected, fmt.Sprintf("%v and %v not equal, but expected", actual, expected))
+}
+
+func TestLinkedList_Search_Error(t *testing.T) {
+	assert := assert.New(t)
+	list := NewLinkedList()
+	list.Insert(0)
+	list.Insert(1)
+	list.Insert(2)
+	list.Insert(3)
+	list.Insert(4)
+	_, actual := list.Search(10)
+	expected := fmt.Errorf("wrong entered id in Search")
+	assert.Equal(actual, expected, fmt.Sprintf("%v and %v not equal, but expected", actual, expected))
+}
+
+func TestLinkedList_Delete_Error(t *testing.T) {
+	assert := assert.New(t)
+	list := NewLinkedList()
+	list.Insert(0)
+	list.Insert(1)
+	list.Insert(2)
+	list.Insert(3)
+	list.Insert(4)
+	actual := list.Delete(10)
+	expected := fmt.Errorf("wrong entered id in Delete")
+	assert.Equal(actual, expected, fmt.Sprintf("%v and %v not equal, but expected", actual, expected))
+}
+
+func TestLinkedList_GetAtPos_Error(t *testing.T) {
+	assert := assert.New(t)
+	list := NewLinkedList()
+	list.Insert(0)
+	list.Insert(1)
+	list.Insert(2)
+	list.Insert(3)
+	list.Insert(4)
+	_, actual := list.GetAtPos(10)
+	expected := fmt.Errorf("wrong entered id in GetAtPos")
+	assert.Equal(actual, expected, fmt.Sprintf("%v and %v not equal, but expected", actual, expected))
 }

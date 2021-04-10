@@ -2,7 +2,6 @@ package queue
 
 import (
 	"fmt"
-	"os"
 )
 
 // Node represents node of data struct queue.
@@ -21,26 +20,23 @@ type Queue struct {
 
 // More compares two items.
 // Returns true if i1 > i2. Returns false if i1 < i2.
-func More(i1, i2 interface{}) bool {
+func More(i1, i2 interface{}) (bool, error) {
 	switch i1.(type) {
 	case int:
-		return i1.(int) > i2.(int)
+		return i1.(int) > i2.(int), nil
 	case float64:
-		return i1.(float64) > i2.(float64)
+		return i1.(float64) > i2.(float64), nil
 	case string:
-		return i1.(string) > i2.(string)
+		return i1.(string) > i2.(string), nil
 	default:
-		fmt.Println("More: unknown type")
-		os.Exit(1)
+		return false, fmt.Errorf("get an error when tried to compare")
 	}
-	return false
 }
 
 // Enqueue adds an item at the tail of the queue.
-func (Q *Queue) Enqueue(item interface{}) {
+func (Q *Queue) Enqueue(item interface{}) error {
 	if Q.IsFull() {
-		fmt.Println("Enqueue: the queue is full")
-		os.Exit(1)
+		return fmt.Errorf("the queue is full in Enqueue")
 	}
 	n := &Node{item: item}
 	if Q.tail == nil {
@@ -51,54 +47,61 @@ func (Q *Queue) Enqueue(item interface{}) {
 		Q.tail = n
 	}
 	Q.Len++
+	return nil
 }
 
 // Dequeue deletes an item at the head of the head.
-func (Q *Queue) Dequeue() {
+func (Q *Queue) Dequeue() error {
 	if Q.IsEmpty() {
-		fmt.Println("Dequeue: the queue is empty")
-		os.Exit(1)
+		return fmt.Errorf("the queue is empty in Dequeue")
 	}
 	Q.head = Q.head.next
 	if Q.head == nil {
 		Q.tail = nil
 	}
 	Q.Len--
+	return nil
 }
 
 // Peek gets the item of the front of the queue without removing it.
-func (Q *Queue) Peek() interface{} {
+func (Q *Queue) Peek() (interface{}, error) {
 	if Q.IsEmpty() {
-		fmt.Println("Peek: the queue is empty")
-		os.Exit(1)
+		return nil, fmt.Errorf("the queue is empty in Peek")
 	}
 	n := Q.head
-	return n.item
+	return n.item, nil
 }
 
 // GetAtPos gets a node by the id.
-func (Q *Queue) GetAtPos(id int) *Node {
+func (Q *Queue) GetAtPos(id int) (*Node, error) {
 	if id < 0 || id >=  Q.Len {
-		fmt.Println("GetAtPos: wrong entered id")
-		os.Exit(1)
+		return nil, fmt.Errorf("wrong entered id in GetAtPos")
 	}
 	ptr := Q.head
 	for i := 0; i < id; i++ {
 		ptr = ptr.next
 	}
-	return ptr
+	return ptr, nil
 }
 
 // Sort sorts the queue using insertion sort algorithm.
-func (Q *Queue) Sort() {
-	for i := 1; i < Q.Len; i++ {
-		x := Q.GetAtPos(i).item
-		j := i
-		for ; j >= 1 && More(Q.GetAtPos(j-1).item, x); j-- {
-			Q.GetAtPos(j).item = Q.GetAtPos(j-1).item
+func (Q *Queue) Sort() error {
+	node := Q.head
+	for node != nil{
+		nextNode := node.next
+		for nextNode != nil {
+			compare, err := More(node.item, nextNode.item)
+			if err != nil {
+				return err
+			}
+			if compare {
+				node.item, nextNode.item = nextNode.item, node.item
+			}
+			nextNode = nextNode.next
 		}
-		Q.GetAtPos(j).item = x
+		node = node.next
 	}
+	return nil
 }
 
 // IsEmpty checks if the queue is empty
